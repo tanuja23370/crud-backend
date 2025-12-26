@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User List | Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div class="header-content">
+        <h1>User List</h1>
+        <p class="subtitle">Manage all registered users (<span id="userCount">0</span> total)</p>
+      </div>
+      <button class="add-user-btn" onclick="addUser()">
+        <i class="fas fa-plus"></i>
+        Add User
+      </button>
+    </div>
+
+    <div class="table-container">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+          <!-- Users will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit User</h2>
+        <span class="close" onclick="closeEditModal()">&times;</span>
+      </div>
+      <form id="editForm" enctype="multipart/form-data">
+        <input type="hidden" id="editUserId" />
+        
+        <div class="form-group">
+          <label for="editName">
+            <i class="fas fa-user"></i>
+            Full Name
+          </label>
+          <input type="text" id="editName" required />
+        </div>
+
+        <div class="form-group">
+          <label for="editDob">
+            <i class="fas fa-calendar"></i>
+            Date of Birth
+          </label>
+          <input type="date" id="editDob" required />
+        </div>
+
+        <div class="form-group">
+          <label for="editEmail">
+            <i class="fas fa-envelope"></i>
+            Email Address
+          </label>
+          <input type="email" id="editEmail" required />
+        </div>
+
+        <div class="form-group">
+          <label for="editMobile">
+            <i class="fas fa-phone"></i>
+            Mobile Number
+          </label>
+          <input type="text" id="editMobile" maxlength="10" required />
+        </div>
+
+        <div class="form-group file-upload">
+          <label for="editPhoto">
+            <i class="fas fa-camera"></i>
+            Profile Photo (Optional)
+          </label>
+          <div class="file-input-wrapper">
+            <input type="file" id="editPhoto" accept="image/*" />
+            <label for="editPhoto" class="file-label">
+              <i class="fas fa-upload"></i>
+              <span class="edit-file-text">Choose new photo</span>
+            </label>
+          </div>
+          <img id="currentPhoto" class="current-photo" />
+        </div>
+
+        <div id="editMessage" class="message"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn-save">
+            <i class="fas fa-save"></i>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

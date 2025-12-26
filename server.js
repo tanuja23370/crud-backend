@@ -27,12 +27,15 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 //multer
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, "public")));
+
 // Connect to MongoDB
 connectDB();
 
-// Test route
+// Default route (homepage)
 app.get("/", (req, res) => {
-  res.send("Server is running");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
