@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User List | Dashboard</title>
+  <title>My Profile | Dashboard</title>
   <link rel="stylesheet" href="dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -11,12 +11,12 @@
   <div class="dashboard-container">
     <div class="dashboard-header">
       <div class="header-content">
-        <h1>User List</h1>
-        <p class="subtitle">Manage all registered users (<span id="userCount">0</span> total)</p>
+        <h1>My Profile</h1>
+        <p class="subtitle">Welcome to your personal dashboard</p>
       </div>
       <button class="add-user-btn" onclick="addUser()">
-        <i class="fas fa-plus"></i>
-        Add User
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
       </button>
     </div>
 
@@ -42,7 +42,7 @@
   <div id="editModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Edit User</h2>
+        <h2>Edit Profile</h2>
         <span class="close" onclick="closeEditModal()">&times;</span>
       </div>
       <form id="editForm" enctype="multipart/form-data">

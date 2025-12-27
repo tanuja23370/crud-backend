@@ -73,8 +73,16 @@ router.post("/", upload.single("photo"), async (req, res) => {
     });
 
     await user.save();
+    console.log("User created successfully:", user._id);
     res.status(201).json(user);
   } catch (error) {
+    console.error("Error creating user:", error);
+    
+    // Handle duplicate email error
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "Email already exists. Please use a different email." });
+    }
+    
     res.status(400).json({ message: error.message });
   }
 });

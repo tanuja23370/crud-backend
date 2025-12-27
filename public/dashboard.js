@@ -1,47 +1,66 @@
-// 🔹 Fetch and display all users
-let allUsers = [];
+// 🔹 Fetch and display current user only
+let currentUser = null;
 
 function loadUsers() {
-  fetch("/api/users")
+  const userId = localStorage.getItem("userId");
+  
+  console.log("Checking userId in localStorage:", userId);
+  
+  if (!userId) {
+    console.log("No userId found - redirecting to registration");
+    alert("Please register or login first.");
+    window.location.href = "index.html";
+    return;
+  }
+  
+  console.log(`Fetching user data for ID: ${userId}`);
+  
+  fetch(`/api/users/${userId}`)
     .then((res) => {
+      console.log("Response status:", res.status);
       if (!res.ok) {
-        throw new Error("Failed to fetch users");
+        throw new Error(`Failed to fetch user data - Status: ${res.status}`);
       }
       return res.json();
     })
-    .then((users) => {
-      allUsers = users;
-      displayUsers(users);
+    .then((user) => {
+      console.log("User data loaded:", user);
+      currentUser = user;
+      displayUsers([user]); // Pass as array to reuse existing function
     })
     .catch((error) => {
-      console.error(error);
-      alert("Unable to load users");
+      console.error("Error loading profile:", error);
+      alert("Unable to load your profile. Please register first.");
+      localStorage.removeItem("userId");
+      window.location.href = "index.html";
     });
 }
 
 function displayUsers(users) {
   const tbody = document.getElementById("userTableBody");
-  const userCount = document.getElementById("userCount");
   
-  userCount.textContent = users.length;
+  if (!tbody) {
+    console.error("Table body element not found");
+    return;
+  }
   
   if (users.length === 0) {
     tbody.innerHTML = `
       <tr>
         <td colspan="5" style="text-align: center; padding: 40px; color: #718096;">
-          No users found. Click "Add User" to create one.
+          No profile found.
         </td>
       </tr>
     `;
     return;
   }
   
-  tbody.innerHTML = users.map(user => {
-    const imageUrl = user.photo
-      ? `/uploads/${user.photo}`
-      : "https://via.placeholder.com/50";
-    
-    return `
+  const user = users[0]; // Only one user (current user)
+  const imageUrl = user.photo
+    ? `/uploads/${user.photo}`
+    : "https://via.placeholder.com/50";
+  
+  tbody.innerHTML = `
     <tr>
       <td>
         <img 
@@ -58,22 +77,21 @@ function displayUsers(users) {
         <div class="action-buttons">
           <button class="btn-edit" onclick="openEditModal('${user._id}')">
             <i class="fas fa-edit"></i>
-            Edit
+            Edit Profile
           </button>
           <button class="btn-delete" onclick="deleteUser('${user._id}')">
             <i class="fas fa-trash"></i>
-            Delete
+            Delete Account
           </button>
         </div>
       </td>
     </tr>
   `;
-  }).join('');
 }
 
 // 🔹 Open Edit Modal
 function openEditModal(userId) {
-  const user = allUsers.find(u => u._id === userId);
+  const user = currentUser;
   if (!user) return;
   
   document.getElementById("editUserId").value = user._id;
@@ -149,25 +167,29 @@ function showEditMessage(text, type) {
   message.className = `message show ${type}`;
 }
 
-// 🔴 DELETE: Delete user
+// 🔴 DELETE: Delete user account
 function deleteUser(userId) {
-  if (!confirm("Are you sure you want to delete this user?")) return;
+  if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) return;
 
   fetch(`/api/users/${userId}`, {
     method: "DELETE",
   })
     .then(() => {
-      alert("User deleted successfully");
-      loadUsers();
+      alert("Account deleted successfully");
+      localStorage.removeItem("userId");
+      window.location.href = "index.html";
     })
     .catch(() => {
-      alert("Error deleting user");
+      alert("Error deleting account");
     });
 }
 
-// 🔹 Add User - redirect to registration
+// 🔹 Logout functionality
 function addUser() {
-  window.location.href = "index.html";
+  if (confirm("Are you sure you want to logout?")) {
+    localStorage.removeItem("userId");
+    window.location.href = "index.html";
+  }
 }
 
 // 🔹 File input handler for edit form
